@@ -25,50 +25,48 @@ class TextRenderer:
         img = Image.open(path)
         draw = ImageDraw.Draw(img)
         
-        # Text positioning
+        # Image size
         height = image.get_height()
         width = image.get_width()
 
+        #Layout calculations
         num_cols = 3
-        margin_x = 0.03
-        margin_y = 0.05
+        margin_x = int(width * 0.01)
+        margin_y = int(height * 0.05)
+        column_width = (width - (2 * margin_x)) // num_cols
+        column_centers = [margin_x + (column_width // 2) + (column_width * i) for i in range(num_cols)]
 
-        x = int(width * margin_x)
-        category_spacing = (width - 2 * x) // 2 - int(width * 0.04)
-        y = int(height * margin_y)
+        #Style settings
         line_spacing = 20
-        text_color = [(173, 0, 0), (255, 230, 0), (34, 255, 0)]  # Red, Yellow, Green
-        shadow_color = (0, 0, 0)      # Black
+        text_color = [(173, 0, 0), (255, 230, 0), (34, 255, 0)]
+        shadow_color = (0, 0, 0)
+        header_color = (255, 255, 255)
 
-        #Font settings
+        #Font
         try:
-            font = ImageFont.truetype("arial.ttf", height*0.02)
-        except:
+            font = ImageFont.truetype("arial.ttf", int(height * 0.02))
+        except IOError:
             font = ImageFont.load_default()
 
-        for idx, category in enumerate(categorized_events):
-            if idx == 0: text = "TODAY"
-            elif idx == 1: text = "THIS WEEK"
-            else: text = "NOT SO SOON"
+        for col_idx, (category, events) in enumerate(zip(["TODAY", "THIS WEEK", "NOT SO SOON"], categorized_events)):
+            x = column_centers[col_idx]
+            y = margin_y
 
-            # Add text shadow
-            draw.text((x+2, y+2), text, font=font, fill=shadow_color, align="center")
-            # Add main text
-            draw.text((x, y), text, font=font, fill=(255, 255, 255), align="center")
-
+            #Draw category header
+            header_text = category
+            bbox = draw.textbbox((x, y), header_text, font=font, anchor="ma")
+            draw.text((x+2, y+2), header_text, font=font, fill=shadow_color, anchor="ma")
+            draw.text((x, y), header_text, font=font, fill=header_color, anchor="ma")
             y += font.size + line_spacing
-            for i, el in enumerate(category, 1):
-                text = f"{i}.{el.get_name()}"
 
-                # Add text shadow
-                draw.text((x+2, y+2), text, font=font, fill=shadow_color, align="center")
-                # Add main text
-                draw.text((x, y), text, font=font, fill=text_color[idx], align="center")
+            #Draw events in category
+            for i, event in enumerate(events, 1):
+                event_text = f"{i}.{event.get_name()}"
+                text_width = draw.textlength(event_text, font=font)
 
+                draw.text((x+2, y+2), event_text, font=font, fill=shadow_color, anchor="ma")
+                draw.text((x, y), event_text, font=font, fill=text_color[col_idx], anchor="ma")
                 y += font.size + line_spacing
-            
-            x += category_spacing
-            y = int(height * 0.05)
             
         # Save modified image
         base, ext = os.path.splitext(path)
