@@ -32,6 +32,16 @@ class EventsRepo:
         
         return self.__events
 
+    def delete_event(self, index):
+        '''
+        Function that deletes the event with the index 'index'
+        
+        Args:
+            index (int): The index of the element that will be deleted
+        '''
+
+        self.__events.pop(index)
+
     def __load_from_file(self):
         '''
         Function that loads the content of the stored data file into the program by parsing the
@@ -54,7 +64,11 @@ class EventsRepo:
                 
                 date2 = datetime.date.fromisoformat(line[3])
 
+                done = line[4] == "True"
+
                 event = Event(name, description, date1, date2)
+                if done: event.set_as_done()
+
                 self.__events.append(event)
 
                 line = file.readline()
@@ -74,8 +88,9 @@ class EventsRepo:
                 description = el.get_description()
                 startingDateStr = el.get_startingDate().strftime("%Y-%m-%d")
                 endingDateStr = el.get_endingDate().strftime("%Y-%m-%d")
+                done = "True" if el.is_done() == True else "False"
 
-                file.write(name + "," + description + "," + startingDateStr + "," + endingDateStr + "\n")
+                file.write(name + "," + description + "," + startingDateStr + "," + endingDateStr + "," + done + "\n")
     
     def add_event(self, event):
         '''

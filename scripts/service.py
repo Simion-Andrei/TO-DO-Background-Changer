@@ -19,8 +19,31 @@ class Service:
         self.__eventsRepo = eventsRepo
         self.__wallpapersRepo = wallpapersRepo
         self.__eventFactory = eventFactory
-        self.__wallpaperFactory = wallpaperFactory #May use it if I create a UI for the app
+        self.__wallpaperFactory = wallpaperFactory #May use it if I create an UI for the app
         self.__currentWallpaperPath = self.__get_wallpaper_path()
+
+    def get_events(self):
+        '''
+        Function that returns a list of current events
+        
+        Raises:
+            EventRepoError: If the list of events is empty
+
+        Returns:
+            list (of events): The list that contains all of the current event objects
+        '''
+
+        return self.__eventsRepo.get_events()
+
+    def delete_event(self, index):
+        '''
+        Function that deletes the event with the index 'index'
+        
+        Args:
+            index (int): The index of the element that will be deleted
+        '''
+
+        self.__eventsRepo.delete_event(index)
 
     def get_categorized_events(self):
         '''
@@ -31,7 +54,7 @@ class Service:
             EventsRepoError: If the list of events is empty
 
         Returns:
-            (list): Three lists of events, categorized by their remaining time (<1day/<1week/1week<)
+            list (event objects): Three lists of events, categorized by their remaining time (<1day/<1week/1week<)
         '''
 
         categorizedEvents = [[], [], []]

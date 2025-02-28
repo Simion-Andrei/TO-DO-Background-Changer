@@ -14,25 +14,23 @@ class UI:
 
         self.__actions = {
             1: self.__add_event,
-            4: self.__load_wallpaper
+            3: self.__delete_event,
+            5: self.__load_wallpaper
         }
 
         self.__printables = [
             "0.Exit",
             "1.Add a new event",
             "2.Mark event as done",
-            "3.See events",
-            "4.Load wallpaper"
+            "3.Delete event",
+            "4.See events",
+            "5.Load wallpaper"
         ]
 
     def __add_event(self):
         '''
         Function that gets name, description, starting date and ending date as input from the user,
         then calls the service function that creates and stores an event with read data
-    
-        Raises:
-            AttributeError: If the dates read from user are not valid (not iso format or not valid dates)
-            ValidationError: If the name or title are empty strings and if the starting date is after the ending date
         '''
 
         name = input("Name: ")
@@ -47,6 +45,39 @@ class UI:
         try:
             self.__service.add_event(name, description, startingDate, endingDate)
             print("Event succesfully added!")
+        except Exception as e:
+            print(e)
+
+    def __delete_event(self):
+        '''
+        Function that prints all the current events to the users, and asks
+        for the index of the one he wants to delete
+        '''
+        
+        try:
+            events = self.__service.get_events()
+        except Exception as e:
+            print(e)
+            return
+
+        for idx, el in enumerate(events, 1):
+            print(f"{idx}.{el.get_name()} -> ending date: {el.get_endingDate().isoformat()}")
+        
+        try:
+            selected = int(input("Type the index of the event you want to delete, or 0 to exit: "))
+        except ValueError:
+            print("The index needs to be a valid number!")
+            return
+        
+        if selected == 0:
+            return
+        
+        if selected < 0 or selected > len(events):
+            print("Index out of range")
+        
+        try:
+            self.__service.delete_event(selected-1)
+            print("Succesfully deleted the event!")
         except Exception as e:
             print(e)
 
@@ -68,6 +99,10 @@ class UI:
             return
         
         if selected == 0:
+            return
+        
+        if selected < 0 or selected >= len(wallpapers):
+            print("Index out of range")
             return
         
         try:

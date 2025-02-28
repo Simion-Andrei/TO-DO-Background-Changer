@@ -1,4 +1,5 @@
-Event1,Simple event,2025-02-17,2025-03-03
-Event2,Some event,2025-02-15,2025-03-22
-Event3,I don't know event,2025-02-17,2025-04-02
-Event3,Testing test,2005-02-03,2005-02-05
+Event1,Simple event,2025-02-17,2025-03-03,False
+Event2,Some event,2025-02-15,2025-03-22,False
+Event3,I don't know event,2025-02-17,2025-04-02,False
+Event3,Testing test,2005-02-03,2005-02-05,False
+Event4,Another test,2025-02-28,2025-03-03,False

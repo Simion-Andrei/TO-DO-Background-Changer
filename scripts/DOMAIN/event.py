@@ -6,14 +6,15 @@ class Event:
         Args:
             name (string): The name of the event
             description (string): Quick description of the event
-            startingDate (datetime): The starting date of the event
-            endingDate (datetime): The ending date of the event
+            startingDate (datetime.date): The starting date of the event
+            endingDate (datetime.date): The ending date of the event
         '''
         
         self.__name = name
         self.__description = description
         self.__startingDate = startingDate
         self.__endingDate = endingDate
+        self.__done = False
 
     def get_name(self):
         return self.__name
@@ -26,3 +27,9 @@ class Event:
     
     def get_endingDate(self):
         return self.__endingDate
+    
+    def is_done(self):
+        return self.__done
+    
+    def set_as_done(self):
+        self.__done = True
