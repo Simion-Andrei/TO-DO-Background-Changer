@@ -101,7 +101,7 @@ class UI:
         if selected == 0:
             return
         
-        if selected < 0 or selected >= len(wallpapers):
+        if selected < 0 or selected > len(wallpapers):
             print("Index out of range")
             return
         

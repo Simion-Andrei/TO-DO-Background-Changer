@@ -5,6 +5,11 @@ from scripts.DOMAIN.wallpaper import Wallpaper
 from scripts.service import Service
 from scripts.ui import UI
 from scripts.DOMAIN.validator import Validator
+from scripts.renderer.textRenderer import TextRenderer
+from scripts.system.wallpaperSys import WallpaperSys
+from scripts.services.eventsService import EventService
+from scripts.services.wallpaperService import WallpaperService
+import os
 
-ui = UI(Service(Validator(), EventsRepo("data/events.txt"), WallpapersRepo(), Event, Wallpaper))
+ui = UI(Service(EventService(EventsRepo(os.path.join("data", "events.txt")), Validator(), Event), WallpaperService(WallpapersRepo()), WallpaperSys(), TextRenderer()))
 ui.run()
