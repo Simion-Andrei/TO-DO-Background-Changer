@@ -1,0 +1,20 @@
+[margins]
+x = 0.01  # % of width
+y = 0.05  # % of height
+
+[columns]
+names = ["TODAY", "THIS WEEK", "NOT SO SOON"] #If you are gonna add more columns, don't forget to add a new color for it's content too
+
+[colors]
+header = [255, 255, 255]
+shadow = [0, 0, 0]
+text = [
+    [173, 0, 0],    # Red - "TODAY"
+    [255, 230, 0],  # Yellow - "THIS WEEK"
+    [34, 255, 0]    # Green - "NOT SO SOON"
+]
+
+[font]
+name = "arial.ttf"
+size = 0.02  # % of height
+line_spacing = 20

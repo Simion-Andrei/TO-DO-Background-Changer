@@ -1,3 +1,0 @@
--Mark as done feature (the events that are marked as done will be written with ̶s̶l̶a̶s̶h̶e̶d̶ ̶t̶e̶x̶t̶)
--If an event is marked as done and expired, delete it from the list
--Make service functions more scalable, configurable

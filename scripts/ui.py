@@ -14,7 +14,9 @@ class UI:
 
         self.__actions = {
             1: self.__add_event,
+            2: self.__mark_event_as_done,
             3: self.__delete_event,
+            4: self.__print_events,
             5: self.__load_wallpaper
         }
 
@@ -26,6 +28,23 @@ class UI:
             "4.See events",
             "5.Load wallpaper"
         ]
+
+    def __print_events(self, events = None):
+        '''
+        Function that prints all current events
+        '''
+        if events == None:
+            try:
+                events = self.__service.get_events()
+            except Exception as e:
+                print(e)
+                return
+
+        for idx, el in enumerate(events, 1):
+            print(f"{idx}.{el.get_name()} - {el.get_description()} - {el.get_startingDate().isoformat()} -> {el.get_endingDate().isoformat()} ", end="")
+            if el.is_done():
+                print("DONE")
+            else: print("NOT DONE")
 
     def __add_event(self):
         '''
@@ -60,8 +79,7 @@ class UI:
             print(e)
             return
 
-        for idx, el in enumerate(events, 1):
-            print(f"{idx}.{el.get_name()} -> ending date: {el.get_endingDate().isoformat()}")
+        self.__print_events(events)
         
         try:
             selected = int(input("Type the index of the event you want to delete, or 0 to exit: "))
@@ -114,6 +132,38 @@ class UI:
     def __print_actions(self):
         for el in self.__printables:
             print(el)
+    
+    def __mark_event_as_done(self):
+        '''
+        Function that prints the events to the user, then asks him to input
+        the index of the one he wants to set as done
+        '''
+
+        try:
+            events = self.__service.get_events()
+        except Exception as e:
+            print(e)
+            return
+
+        self.__print_events(events)
+        
+        try:
+            selected = int(input("Type the index of the event you want to set as done, or 0 to exit: "))
+        except ValueError:
+            print("The index needs to be a valid number!")
+            return
+        
+        if selected == 0:
+            return
+        
+        if selected < 0 or selected > len(events):
+            print("Index out of range")
+        
+        try:
+            self.__service.mark_event_as_done(selected-1)
+            print("Succesfully set event as done!")
+        except Exception as e:
+            print(e)
 
     def run(self):
         '''

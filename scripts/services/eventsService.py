@@ -49,6 +49,16 @@ class EventService:
 
         self.__repo.delete_event(index)
     
+    def mark_as_done(self, index):
+        '''
+        Function that marks the event indexed with 'index' as done
+        
+        Args:
+            index (int): The index of the element that will be markes as done
+        '''
+
+        self.__repo.mark_as_done(index)
+
     def get_categorized_events(self):
         '''
         Function that returns three lists of events, based

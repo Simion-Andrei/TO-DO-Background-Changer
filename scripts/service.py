@@ -56,6 +56,16 @@ class Service:
 
         self.__eventService.add_event(name, description, startingDate, endingDate)
 
+    def mark_event_as_done(self, index):
+        '''
+        Function that marks an event as done
+        
+        Args:
+            index (int): The index of the element that will be markes as done
+        '''
+
+        self.__eventService.mark_as_done(index)
+
     def get_available_wallpapers(self):
         '''
         Function that returns all the available wallpapers

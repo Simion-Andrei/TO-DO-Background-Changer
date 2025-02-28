@@ -42,6 +42,15 @@ class EventsRepo:
 
         self.__events.pop(index)
 
+    def mark_as_done(self, index):
+        '''
+        Function that sets the event at position 'index' as done
+        '''
+
+        self.__events[index].set_as_done()
+
+        self.__load_to_file()
+
     def __load_from_file(self):
         '''
         Function that loads the content of the stored data file into the program by parsing the
@@ -65,6 +74,10 @@ class EventsRepo:
                 date2 = datetime.date.fromisoformat(line[3])
 
                 done = line[4] == "True"
+
+                if done and datetime.date.today() > date2:
+                    line = file.readline()
+                    continue
 
                 event = Event(name, description, date1, date2)
                 if done: event.set_as_done()

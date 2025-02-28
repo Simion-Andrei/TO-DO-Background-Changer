@@ -9,7 +9,8 @@ from scripts.renderer.textRenderer import TextRenderer
 from scripts.system.wallpaperSys import WallpaperSys
 from scripts.services.eventsService import EventService
 from scripts.services.wallpaperService import WallpaperService
+from scripts.REPO.settingsRepo import Settings
 import os
 
-ui = UI(Service(EventService(EventsRepo(os.path.join("data", "events.txt")), Validator(), Event), WallpaperService(WallpapersRepo()), WallpaperSys(), TextRenderer()))
+ui = UI(Service(EventService(EventsRepo(os.path.join("data", "events.txt")), Validator(), Event), WallpaperService(WallpapersRepo()), WallpaperSys(), TextRenderer(Settings(os.path.join("data", "settings.toml")))))
 ui.run()

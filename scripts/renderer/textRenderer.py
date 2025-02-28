@@ -2,8 +2,8 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 
 class TextRenderer:
-    def __init__(self):
-        pass
+    def __init__(self, config):
+        self.__config = config
 
     def add_text_to_wallpaper(self, image, path, categorized_events, output_suffix="with_text"):
         '''
@@ -30,25 +30,25 @@ class TextRenderer:
         width = image.get_width()
 
         #Layout calculations
-        num_cols = 3
-        margin_x = int(width * 0.01)
-        margin_y = int(height * 0.05)
+        num_cols = len(self.__config.COLUMNS)
+        margin_x = int(width * self.__config.MARGIN_SIZE_X)
+        margin_y = int(height * self.__config.MARGIN_SIZE_Y)
         column_width = (width - (2 * margin_x)) // num_cols
         column_centers = [margin_x + (column_width // 2) + (column_width * i) for i in range(num_cols)]
 
         #Style settings
-        line_spacing = 20
-        text_color = [(173, 0, 0), (255, 230, 0), (34, 255, 0)]
-        shadow_color = (0, 0, 0)
-        header_color = (255, 255, 255)
+        line_spacing = self.__config.LINE_SPACING
+        text_color = self.__config.TEXT_COLOR
+        shadow_color = self.__config.SHADOW_COLOR
+        header_color = self.__config.HEADER_COLOR
 
         #Font
         try:
-            font = ImageFont.truetype("arial.ttf", int(height * 0.02))
+            font = ImageFont.truetype(self.__config.FONT, int(height * self.__config.FONT_SIZE))
         except IOError:
             font = ImageFont.load_default()
 
-        for col_idx, (category, events) in enumerate(zip(["TODAY", "THIS WEEK", "NOT SO SOON"], categorized_events)):
+        for col_idx, (category, events) in enumerate(zip(self.__config.COLUMNS, categorized_events)):
             x = column_centers[col_idx]
             y = margin_y
 
@@ -65,7 +65,22 @@ class TextRenderer:
                 text_width = draw.textlength(event_text, font=font)
 
                 draw.text((x+2, y+2), event_text, font=font, fill=shadow_color, anchor="ma")
+                text_bbox = draw.textbbox((x, y), event_text, font=font, anchor="ma")
                 draw.text((x, y), event_text, font=font, fill=text_color[col_idx], anchor="ma")
+
+                if event.is_done():
+                    # Calculate line positions
+                    left, top, right, bottom = text_bbox
+                    strike_y = (top + bottom) // 2
+                    strike_color = text_color[col_idx]
+                    
+                    # Draw strike line (slightly thicker than text)
+                    draw.line(
+                        [(left, strike_y), (right, strike_y)],
+                        fill=strike_color,
+                        width=int(font.size * 0.15)  # Dynamic width based on font size
+                    )
+                    
                 y += font.size + line_spacing
             
         # Save modified image
